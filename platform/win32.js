@@ -16,7 +16,8 @@ class SayPlatformWin32 extends SayPlatformBase {
     let pipedData = ''
     let options = {}
 
-    let psCommand = `Add-Type -AssemblyName System.speech;$speak = New-Object System.Speech.Synthesis.SpeechSynthesizer;`
+    let psCommand = `$OutputEncoding = [console]::InputEncoding = [console]::OutputEncoding = New-Object System.Text.UTF8Encoding;`
+    psCommand += `Add-Type -AssemblyName System.speech;$speak = New-Object System.Speech.Synthesis.SpeechSynthesizer;`
 
     if (voice) {
       psCommand += `$speak.SelectVoice('${voice}');`
@@ -27,7 +28,7 @@ class SayPlatformWin32 extends SayPlatformBase {
       psCommand += `$speak.Rate = ${adjustedSpeed};`
     }
 
-    psCommand += `$speak.Speak([Console]::In.ReadToEnd())`
+    psCommand += `$speak.Speak($($input))`
 
     pipedData += text
     args.push(psCommand)
@@ -40,8 +41,9 @@ class SayPlatformWin32 extends SayPlatformBase {
     let args = []
     let pipedData = ''
     let options = {}
-
-    let psCommand = `Add-Type -AssemblyName System.speech;$speak = New-Object System.Speech.Synthesis.SpeechSynthesizer;`
+  
+    let psCommand = `$OutputEncoding = [console]::InputEncoding = [console]::OutputEncoding = New-Object System.Text.UTF8Encoding;`
+    psCommand += `Add-Type -AssemblyName System.speech;$speak = New-Object System.Speech.Synthesis.SpeechSynthesizer;`
 
     if (voice) {
       psCommand += `$speak.SelectVoice('${voice}');`
@@ -57,7 +59,7 @@ class SayPlatformWin32 extends SayPlatformBase {
       psCommand += `$speak.SetOutputToWaveFile('${filename}');`
     }
 
-    psCommand += `$speak.Speak([Console]::In.ReadToEnd());$speak.Dispose()`
+    psCommand += `$speak.Speak($($input));$speak.Dispose()`
 
     pipedData += text
     args.push(psCommand)
@@ -78,7 +80,8 @@ class SayPlatformWin32 extends SayPlatformBase {
 
   getVoices () {
     let args = []
-    let psCommand = 'Add-Type -AssemblyName System.speech;$speak = New-Object System.Speech.Synthesis.SpeechSynthesizer;$speak.GetInstalledVoices() | % {$_.VoiceInfo.Name}'
+    let psCommand = `$OutputEncoding = [console]::InputEncoding = [console]::OutputEncoding = New-Object System.Text.UTF8Encoding;`
+    psCommand += 'Add-Type -AssemblyName System.speech;$speak = New-Object System.Speech.Synthesis.SpeechSynthesizer;$speak.GetInstalledVoices() | % {$_.VoiceInfo.Name}'
     args.push(psCommand)
     return { command: COMMAND, args }
   }

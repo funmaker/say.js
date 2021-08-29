@@ -2,13 +2,11 @@ declare module 'say' {
   const say: SayJS.Say;
 
   namespace SayJS {
-    type errorCallback = (err: string) => void;
-
     class Say {
-      public export(text: string, voice?: string, speed?: number, filePath?: string, callback?: errorCallback): void;
-      public speak(text: string, voice?: string, speed?: number, callback?: errorCallback): void;
-      public stop(): void;
-      public getInstalledVoices(callback: errorCallback): void;
+      public export(text: string, voice?: string, speed?: number, filePath?: string): Promise<void>;
+      public speak(text: string, voice?: string, speed?: number): Promise<void>;
+      public stop(): Promise<void>;
+      public getInstalledVoices(): Promise<string[]>;
     }
   }
 
